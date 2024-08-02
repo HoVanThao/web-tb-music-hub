@@ -33,4 +33,33 @@ const deleteAlbum = async (req, res) => {
     res.status(StatusCodes.OK).json({ message: "Xóa thành công", album: removeAlbum })
 }
 
-export { addAlbum, listAlbum, deleteAlbum }
+const updateAlbum = async (req, res) => {
+    const { id } = req.params;
+    const { name, desc, bgColour } = req.body;
+
+    const album = await albumModel.findById(id);
+    if (!album) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: "Album không tồn tại" });
+    }
+
+    let updates = { name, desc, bgColour };
+
+    // Nếu có file image mới, upload và cập nhật
+    if (req.file) {
+        const imageFile = req.file;
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" });
+        updates.image = imageUpload.secure_url;
+    }
+
+    // Xóa các giá trị undefined trong đối tượng cập nhật
+    Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
+
+    const updatedAlbum = await albumModel.findByIdAndUpdate(id, updates, {
+        new: true,
+        runValidators: true
+    });
+
+    res.status(StatusCodes.OK).json({ msg: "Cập nhật thành công", album: updatedAlbum });
+};
+
+export { addAlbum, listAlbum, deleteAlbum, updateAlbum }

@@ -84,25 +84,29 @@ export const validateSongInput = withValidationErrors([
 
     // Xác thực các file không bị bỏ qua
     (req, res, next) => {
-        // Xử lý lỗi từ express-validator
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const errorMessages = errors.array().map((error) => error.msg);
-            throw new BadRequestError(errorMessages);
-        }
 
-        // Kiểm tra sự tồn tại của các file
-        if (!req.files || !req.files.image || !req.files.audio) {
-            throw new BadRequestError('Ảnh và âm thanh không được để trống');
-        }
+        if (req.method === 'POST') {
 
-        // Đảm bảo có ít nhất một ảnh và một âm thanh
-        if (req.files.image.length === 0) {
-            throw new BadRequestError('Ảnh không được để trống');
-        }
+            // Xử lý lỗi từ express-validator
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const errorMessages = errors.array().map((error) => error.msg);
+                throw new BadRequestError(errorMessages);
+            }
 
-        if (req.files.audio.length === 0) {
-            throw new BadRequestError('File âm thanh không được để trống');
+            // Kiểm tra sự tồn tại của các file
+            if (!req.files || !req.files.image || !req.files.audio) {
+                throw new BadRequestError('Ảnh và âm thanh không được để trống');
+            }
+
+            // Đảm bảo có ít nhất một ảnh và một âm thanh
+            if (req.files.image.length === 0) {
+                throw new BadRequestError('Ảnh không được để trống');
+            }
+
+            if (req.files.audio.length === 0) {
+                throw new BadRequestError('File âm thanh không được để trống');
+            }
         }
 
         next();
@@ -119,13 +123,15 @@ export const validateAlbumInput = withValidationErrors([
     body('desc').notEmpty().withMessage('Mô tả không được để trống'),
     body('bgColour').notEmpty().withMessage('Màu nền không được để trống'),
 
-    // Custom validation to check the presence of the file
     (req, res, next) => {
-        if (!req.file) {
-            throw new BadRequestError('Ảnh không được để trống');
+        if (req.method === 'POST') {
+            // Kiểm tra sự tồn tại của file chỉ khi thêm mới
+            if (!req.file) {
+                throw new BadRequestError('Ảnh không được để trống');
+            }
         }
         next();
-    }
+    },
 ]);
 
 
