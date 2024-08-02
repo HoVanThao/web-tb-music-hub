@@ -1,7 +1,6 @@
 {
-  "name": "appwebquanlycongviec",
+  "name": "App-TB-Music",
   "version": "1.0.0",
-  "description": "[Jobify](https://jobify.live/)",
   "type": "module",
   "main": "index.js",
   "scripts": {

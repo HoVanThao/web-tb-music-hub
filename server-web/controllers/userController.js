@@ -1,6 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/UserModel.js';
-import Job from '../models/JobModel.js';
 import cloudinary from 'cloudinary';
 import { promises as fs } from 'fs';
 import { formatImage } from '../middleware/multerMiddleware.js';
@@ -11,11 +10,6 @@ export const getCurrentUser = async (req, res) => {
     res.status(StatusCodes.OK).json({ user: userWithoutPassword });
 };
 
-export const getApplicationStats = async (req, res) => {
-    const users = await User.countDocuments();
-    const jobs = await Job.countDocuments();
-    res.status(StatusCodes.OK).json({ users, jobs });
-};
 
 
 

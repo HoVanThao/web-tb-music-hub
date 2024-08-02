@@ -1,7 +1,5 @@
 import { body, param, validationResult } from 'express-validator';
-import { JOB_STATUS, JOB_TYPE } from '../utils/constants.js';
-import Job from '../models/JobModel.js';
-import mongoose from 'mongoose';
+
 import { BadRequestError, NotFoundError, UnauthorizedError } from '../errors/customErrors.js';
 import User from '../models/UserModel.js';
 
@@ -26,39 +24,7 @@ const withValidationErrors = (validateValues) => {
     ];
 };
 
-export const validateTest = withValidationErrors([
-    body('name')
-        .notEmpty()
-        .withMessage('tên là bắt buộc')
-        .isLength({ min: 3, max: 50 })
-        .withMessage('tên phải dài từ 3 đến 50 ký tự')
-        .trim(),
-]);
 
-export const validateJobInput = withValidationErrors([
-    body('company').notEmpty().withMessage('công ty là bắt buộc'),
-    body('position').notEmpty().withMessage('vị trí là bắt buộc'),
-    body('jobLocation').notEmpty().withMessage('vị trí công việc là bắt buộc'),
-    body('jobStatus')
-        .isIn(Object.values(JOB_STATUS))
-        .withMessage('trạng thái không hợp lệ'),
-    body('jobType')
-        .isIn(Object.values(JOB_TYPE))
-        .withMessage('loại công việc không hợp lệ'),
-]);
-
-
-export const validateIdParam = withValidationErrors([
-    param('id').custom(async (value, { req }) => {
-        const isValidIdMongo = mongoose.Types.ObjectId.isValid(value);
-        if (!isValidIdMongo) throw new BadRequestError(`id MongoDB không hợp lệ`);
-        const job = await Job.findById(value);
-        if (!job) throw new NotFoundError(`không có công việc nào có id: ${value} `);
-        const isAdmin = req.user.role === 'admin';
-        const isOwner = req.user.userId === job.createdBy.toString();
-        if (!isAdmin && !isOwner) throw new UnauthorizedError('không được phép truy cập');
-    }),
-]);
 
 
 export const validateRegisterInput = withValidationErrors([
