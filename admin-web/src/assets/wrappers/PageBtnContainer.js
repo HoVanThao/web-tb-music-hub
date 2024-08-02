@@ -26,24 +26,24 @@ const Wrapper = styled.section`
   }
   .active{
     background:var(--primary-500);
-        color: var(--white);
+    color: var(--white);
 
   }
   .prev-btn,.next-btn{
     background: var(--background-secondary-color);
     border-color: transparent;
-        border-radius: var(--border-radius);
+    border-radius: var(--border-radius);
 
     width: 100px;
     height: 40px;
-        color: var(--primary-500);
-text-transform:capitalize;
-letter-spacing:var(--letter-spacing);
-display:flex;
-align-items:center;
-justify-content:center;
-gap:0.5rem;
-cursor:pointer;
+    color: var(--primary-500);
+    text-transform:capitalize;
+    letter-spacing:var(--letter-spacing);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0.5rem;
+    cursor:pointer;
   }
   .prev-btn:hover,.next-btn:hover{
     background:var(--primary-500);
