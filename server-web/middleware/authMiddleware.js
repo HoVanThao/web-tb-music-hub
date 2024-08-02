@@ -9,8 +9,8 @@ export const authenticateUser = (req, res, next) => {
 
     try {
         const { userId, role } = verifyJWT(token);
-        const testUser = userId === '6694621a186d6ff67ccfa2bd';
-        req.user = { userId, role, testUser };
+
+        req.user = { userId, role };
         next();
     } catch (error) {
         throw new UnauthenticatedError('xác thực không hợp lệ');
@@ -26,9 +26,3 @@ export const authorizePermissions = (...roles) => {
     };
 };
 
-export const checkForTestUser = (req, res, next) => {
-    if (req.user.testUser) {
-        throw new BadRequestError('User dùng thử. Chỉ xem!');
-    }
-    next();
-};
